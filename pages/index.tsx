@@ -1,23 +1,23 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-// import styles from '../styles/Home.module.css'
+import type { NextPage } from 'next';
+import Head from 'next/head';
 
 const Home: NextPage = () => {
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center h-screen">
+    <div className="min-h-screen flex flex-col justify-center items-center h-screen bg-cyan-500">
       <Head>
         <title>Pomodoro</title>
-        <meta name="description" content="Simple Pomodoro Web App using Next.js" />
+        <meta
+          name="description"
+          content="Simple Pomodoro Web App using Next.js"
+        />
         <link rel="icon" href="/tomato.png" />
       </Head>
 
       <main className="flex flex-col justify-center items-center">
-        <h1 className="m-0 text-6xl text-center">
-          POMODORO
-        </h1>
+        <h1 className="font-serif m-0 text-6xl text-center">POMODORO</h1>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
