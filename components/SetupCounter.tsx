@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { CounterContext } from '../context/counter/counterContext';
 
-export const Setup = () => {
+export const SetupCounter = () => {
+  const { counter, start } = useContext(CounterContext);
+
+  if (counter.isActive === true) {
+    return null;
+  }
+
   return (
     <form className="mb-4" action="/" method="post">
       <div className="flex flex-col mb-4">
@@ -93,6 +100,7 @@ export const Setup = () => {
       <button
         className="block bg-gray-600 text-white uppercase text-lg mt-10 mx-auto py-2 px-12 rounded"
         type="submit"
+        onClick={start}
       >
         Begin
       </button>

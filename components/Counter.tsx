@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { CounterContext } from '../context/counter/counterContext';
 
-export const Counter = () => {
+export const Counter: React.FC = () => {
+  const { counter, stop } = useContext(CounterContext);
+
+  if (counter.isActive === false) {
+    return null;
+  }
+
   return (
     <div className="bg-white-500 px-5 py-5">
       <div className="text-white-100 ">
@@ -27,6 +34,7 @@ export const Counter = () => {
           <button
             className="block bg-gray-600 text-white uppercase  mt-10 mr-1 mx-auto py-2 px-12 rounded"
             type="submit"
+            onClick={stop}
           >
             Skip
           </button>
