@@ -1,5 +1,10 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import React from 'react';
+
+import { Counter } from '../components/Counter';
+import { SetupCounter } from '../components/SetupCounter';
+import { CounterState } from '../context/counter/CounterState';
 
 const Home: NextPage = () => {
   return (
@@ -14,7 +19,19 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="flex flex-col justify-center items-center">
-        <h1 className="font-serif m-0 text-6xl text-center">POMODORO</h1>
+        <div className="flex items-center h-screen w-full bg-teal-lighter">
+          <div className="w-full p-8 m-4">
+            <h1 className="font-serif w-full m-0 mb-10 text-6xl uppercase text-center text-white">
+              Pomodoro
+            </h1>
+            <CounterState>
+              <>
+                <SetupCounter />
+                <Counter />
+              </>
+            </CounterState>
+          </div>
+        </div>
       </main>
     </div>
   );
