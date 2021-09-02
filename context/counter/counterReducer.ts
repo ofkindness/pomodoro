@@ -1,6 +1,13 @@
 enum ActionType {
   Start = 'START_COUNTER',
+  Skip = 'SKIP_COUNTER',
   Stop = 'STOP_COUNTER',
+}
+
+enum IntervalType {
+  'Working Time' = 1,
+  'Break',
+  'LongBreak',
 }
 
 interface Action {
@@ -10,16 +17,29 @@ interface Action {
 
 type State = {
   isActive: boolean;
+  isComplete: boolean;
+  taskName?: string;
+  currentIntervalType?: IntervalType;
 };
 
 export const initialCounterState: State = {
   isActive: false,
+  isComplete: false,
 };
 
-export const StopAction: Action = {
-  type: ActionType.Stop,
+export const SkipAction: Action = {
+  type: ActionType.Skip,
   payload: {
     isActive: false,
+    isComplete: false,
+  },
+};
+
+export const RestartAction: Action = {
+  type: ActionType.Start,
+  payload: {
+    isActive: false,
+    isComplete: false,
   },
 };
 
@@ -27,6 +47,16 @@ export const StartAction: Action = {
   type: ActionType.Start,
   payload: {
     isActive: true,
+    isComplete: false,
+    currentIntervalType: IntervalType['Working Time'],
+  },
+};
+
+export const StopAction: Action = {
+  type: ActionType.Stop,
+  payload: {
+    isActive: false,
+    isComplete: true,
   },
 };
 
@@ -35,13 +65,10 @@ export function counterReducer(state: State, action: Action): State {
 
   switch (type) {
     case ActionType.Start:
-      return {
-        ...action.payload,
-      };
-
     case ActionType.Stop:
+    case ActionType.Skip:
       return {
-        ...action.payload,
+        ...payload,
       };
 
     default:

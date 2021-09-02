@@ -3,6 +3,7 @@ import Head from 'next/head';
 import React from 'react';
 
 import { Counter } from '../components/Counter';
+import { Results } from '../components/Results';
 import { SetupCounter } from '../components/SetupCounter';
 import { CounterState } from '../context/counter/CounterState';
 
@@ -28,6 +29,7 @@ const Home: NextPage = () => {
               <>
                 <SetupCounter />
                 <Counter />
+                <Results />
               </>
             </CounterState>
           </div>
