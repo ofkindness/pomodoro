@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import { CounterContext } from '../context/counter/counterContext';
+import { SelectOption } from './UI/SelectOption';
+import { Button } from './UI/Button';
 
 export const SetupCounter: React.FC = () => {
   const { counter, start } = useContext(CounterContext);
@@ -17,110 +19,17 @@ export const SetupCounter: React.FC = () => {
           />
         </div>
 
-        <div className="flex flex-col mb-4">
-          <div className="inline-block relative">
-            <select
-              defaultValue={'DEFAULT'}
-              className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            >
-              <option value="DEFAULT" disabled>
-                Pomodoro
-              </option>
-              <option value={20}>20</option>
-              <option value={25}>25</option>
-              <option value={30}>30</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg
-                className="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
-            </div>
-          </div>
-        </div>
+        <SelectOption name={'Pomodoro'} values={[15, 20, 25]} />
 
-        <div className="flex flex-col mb-4">
-          <div className="inline-block relative">
-            <select
-              defaultValue={'DEFAULT'}
-              className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            >
-              <option value="DEFAULT" disabled>
-                Short Break
-              </option>
-              <option>5</option>
-              <option>10</option>
-              <option>15</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg
-                className="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
-            </div>
-          </div>
-        </div>
+        <SelectOption name={'Short Break'} values={[15, 20, 25]} />
 
-        <div className="flex flex-col mb-4">
-          <div className="inline-block relative">
-            <select
-              defaultValue={'DEFAULT'}
-              className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            >
-              <option value="DEFAULT" disabled>
-                Long Break
-              </option>
-              <option>5</option>
-              <option>10</option>
-              <option>15</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg
-                className="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
-            </div>
-          </div>
-        </div>
+        <SelectOption name={'Long Break'} values={[15, 20, 25]} />
 
-        <div className="flex flex-col mb-4">
-          <div className="inline-block relative">
-            <select
-              defaultValue={'DEFAULT'}
-              className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            >
-              <option value="DEFAULT" disabled>
-                Long Break Interval
-              </option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg
-                className="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
-            </div>
-          </div>
-        </div>
+        <SelectOption name={'Long Break Interval'} values={[1, 2, 3]} />
 
-        <button
-          className="block bg-gray-600 text-white uppercase text-lg mt-10 mx-auto py-2 px-12 rounded"
-          type="submit"
-          onClick={start}
-        >
-          Begin
-        </button>
+        <div className="items-center">
+          <Button onClick={start} name={'Begin'} />
+        </div>
       </form>
     );
   }

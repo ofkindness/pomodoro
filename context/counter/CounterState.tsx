@@ -23,7 +23,13 @@ export const CounterState = (props: CounterStateProps) => {
 
   return (
     <CounterContext.Provider
-      value={{ restart, start, stop, skip, counter: state }}
+      value={{
+        counter: state,
+        restart,
+        skip,
+        start,
+        stop,
+      }}
     >
       {props.children}
     </CounterContext.Provider>

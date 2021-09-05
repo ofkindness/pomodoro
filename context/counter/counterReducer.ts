@@ -1,4 +1,5 @@
 enum ActionType {
+  Init = 'INIT_COUNTER',
   Start = 'START_COUNTER',
   Skip = 'SKIP_COUNTER',
   Stop = 'STOP_COUNTER',
@@ -16,6 +17,7 @@ interface Action {
 }
 
 type State = {
+  count?: number;
   isActive: boolean;
   isComplete: boolean;
   taskName?: string;
@@ -26,6 +28,8 @@ export const initialCounterState: State = {
   isActive: false,
   isComplete: false,
 };
+
+const initialCountValue = 60;
 
 export const SkipAction: Action = {
   type: ActionType.Skip,
