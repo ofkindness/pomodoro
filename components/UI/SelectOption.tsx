@@ -1,21 +1,22 @@
-import React from 'react';
+import React, { ChangeEventHandler } from 'react';
 
 interface SelectOptionProps {
   name: string;
   values: number[];
+  onChange: any;
+  defaultValue: any;
 }
 
 export const SelectOption = (props: SelectOptionProps) => {
   return (
     <div className="flex flex-col mb-4">
       <div className="inline-block relative">
+        <span className="text-gray-700">{props.name}</span>
         <select
-          defaultValue={'DEFAULT'}
+          defaultValue={props.defaultValue}
           className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+          onChange={(e) => props.onChange(e.target.value)}
         >
-          <option value="DEFAULT" disabled>
-            {props.name}
-          </option>
           {props.values.map((value, i) => (
             <option key={i} value={value}>
               {value}
