@@ -1,16 +1,16 @@
 import React, { useReducer } from 'react';
 import { CounterContext } from './counterContext';
 import {
+  ClearAction,
   CompleteAction,
   counterReducer,
   InitAction,
   initialCounterState,
-  ClearAction,
-  SetTaskName,
-  SetWorkInterval,
+  SetIterations,
   SetLongbreakInterval,
   SetShortbreakInterval,
-  SetIterations,
+  SetTaskName,
+  SetWorkInterval,
   SkipAction,
   StartCounting,
   StopCounting,
@@ -20,41 +20,35 @@ export interface CounterStateProps {
   children?: JSX.Element;
 }
 
-export const defaultCounterValues = {
-  taskName: 'Task Name',
-  workInterval: 25,
-  shortbreakInterval: 5,
-  intervals: 3,
-  longbreakInterval: 30,
-};
-
 export const CounterState = (props: CounterStateProps) => {
   const [state, dispatch] = useReducer(counterReducer, initialCounterState);
 
-  const setTaskName = (taskName = defaultCounterValues.taskName) =>
-    dispatch(SetTaskName(taskName, state));
+  const clear = () => dispatch(ClearAction);
 
-  const setWorkInterval = (workInterval = defaultCounterValues.workInterval) =>
-    dispatch(SetWorkInterval(workInterval, state));
+  const complete = () => dispatch(CompleteAction(state));
 
-  const setShortbreakInterval = (
-    shortbreakInterval = defaultCounterValues.shortbreakInterval
-  ) => dispatch(SetShortbreakInterval(shortbreakInterval, state));
+  const init = () => dispatch(InitAction(state));
 
-  const setIterations = (iterations = defaultCounterValues.intervals) =>
+  const setIterations = (iterations: number) =>
     dispatch(SetIterations(iterations, state));
 
-  const setLongbreakInterval = (
-    longbreakInterval = defaultCounterValues.longbreakInterval
-  ) => dispatch(SetLongbreakInterval(longbreakInterval, state));
+  const setLongbreakInterval = (longbreakInterval: number) =>
+    dispatch(SetLongbreakInterval(longbreakInterval, state));
+
+  const setShortbreakInterval = (shortbreakInterval: number) =>
+    dispatch(SetShortbreakInterval(shortbreakInterval, state));
+
+  const setTaskName = (taskName: string) =>
+    dispatch(SetTaskName(taskName, state));
+
+  const setWorkInterval = (workInterval: number) =>
+    dispatch(SetWorkInterval(workInterval, state));
+
+  const skip = () => dispatch(SkipAction(state));
 
   const startCounting = () => dispatch(StartCounting(state));
-  const stopCounting = () => dispatch(StopCounting(state));
 
-  const skip = () => dispatch(SkipAction);
-  const init = () => dispatch(InitAction);
-  const clear = () => dispatch(ClearAction);
-  const complete = () => dispatch(CompleteAction);
+  const stopCounting = () => dispatch(StopCounting(state));
 
   return (
     <CounterContext.Provider
@@ -63,11 +57,11 @@ export const CounterState = (props: CounterStateProps) => {
         complete,
         counter: state,
         init,
+        setIterations,
+        setLongbreakInterval,
+        setShortbreakInterval,
         setTaskName,
         setWorkInterval,
-        setShortbreakInterval,
-        setLongbreakInterval,
-        setIterations,
         skip,
         startCounting,
         stopCounting,

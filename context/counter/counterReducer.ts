@@ -12,11 +12,19 @@ enum ActionType {
   SetIterations = 'SETUP_ITERATIONS',
 }
 
-enum IntervalType {
+export enum IntervalType {
   'Working Time' = 1,
-  'Break',
-  'LongBreak',
+  'Short Break',
+  'Long Break',
 }
+
+const defaultCounterValues = {
+  taskName: 'Task Name',
+  workInterval: 25,
+  shortbreakInterval: 5,
+  iterations: 3,
+  longbreakInterval: 30,
+};
 
 interface Action {
   type: ActionType;
@@ -24,37 +32,73 @@ interface Action {
 }
 
 type State = {
-  count?: number;
+  count: number;
   isActive: boolean;
   isComplete: boolean;
-  isCounting?: boolean;
-  taskName?: string;
-  currentIntervalType?: IntervalType;
+  isCounting: boolean;
+  taskName: string;
+  workInterval: number;
+  shortbreakInterval: number;
+  iterations: number;
+  longbreakInterval: number;
+  currentIntervalType?: number;
+  currentIteration?: number;
 };
 
 export const initialCounterState: State = {
+  count: 0,
   isActive: false,
   isComplete: false,
+  isCounting: false,
+  currentIteration: 0,
+  ...defaultCounterValues,
 };
 
-const initialCount = 10;
+const nextIntervalType = (
+  currentIntervalType?: number,
+  iterationsLeft?: number
+) => {
+  if (currentIntervalType === undefined) {
+    return IntervalType['Working Time'];
+  }
+
+  if (currentIntervalType === IntervalType['Working Time']) {
+    return IntervalType['Short Break'];
+  }
+
+  if (currentIntervalType === IntervalType['Short Break']) {
+    if (iterationsLeft && iterationsLeft > 0) {
+      return IntervalType['Working Time'];
+    }
+
+    return IntervalType['Long Break'];
+  }
+};
+
+const iterationsLeft = (
+  currentIntervalType: number | undefined,
+  iterations: number
+) => {
+  if (currentIntervalType === IntervalType['Short Break']) {
+    return iterations - 1;
+  }
+
+  return iterations;
+};
+
+export const InitAction = (state: State) => ({
+  type: ActionType.Init,
+  payload: {
+    ...state,
+    isActive: true,
+    currentIntervalType: nextIntervalType(),
+  },
+});
 
 export const ClearAction: Action = {
-  type: ActionType.Init,
+  type: ActionType.Clear,
   payload: {
-    isActive: false,
-    isComplete: false,
-  },
-};
-
-export const InitAction: Action = {
-  type: ActionType.Init,
-  payload: {
-    isActive: true,
-    isComplete: false,
-    isCounting: false,
-    count: initialCount,
-    currentIntervalType: IntervalType['Working Time'],
+    ...initialCounterState,
   },
 };
 
@@ -134,38 +178,62 @@ export const StopCounting = (state: State) => {
   };
 };
 
-export const SkipAction: Action = {
-  type: ActionType.Skip,
-  payload: {
-    isActive: false,
-    isComplete: false,
-  },
+export const SkipAction = (state: State) => {
+  const iterations = iterationsLeft(
+    state.currentIntervalType,
+    state.iterations
+  );
+  const currentIntervalType = nextIntervalType(
+    state.currentIntervalType,
+    iterations
+  );
+
+  if (iterations === 0 && currentIntervalType === IntervalType['Long Break']) {
+    return {
+      type: ActionType.Skip,
+      payload: {
+        ...state,
+        currentIntervalType,
+        iterations,
+        isComplete: true,
+        isActive: false,
+      },
+    };
+  }
+
+  return {
+    type: ActionType.Skip,
+    payload: {
+      ...state,
+      currentIntervalType,
+      iterations,
+    },
+  };
 };
 
-export const CompleteAction: Action = {
+export const CompleteAction = (state: State) => ({
   type: ActionType.Complete,
   payload: {
+    ...state,
     isActive: false,
     isComplete: true,
   },
-};
+});
 
 export function counterReducer(state: State, action: Action): State {
   const { type, payload } = action;
-
-  console.log({ type, payload });
   switch (type) {
-    case ActionType.SetTaskName:
-    case ActionType.SetWorkInterval:
-    case ActionType.SetShortbreakInterval:
-    case ActionType.SetLongbreakInterval:
-    case ActionType.SetIterations:
-    case ActionType.StartCounting:
-    case ActionType.StopCounting:
+    case ActionType.Clear:
     case ActionType.Complete:
     case ActionType.Init:
-    case ActionType.Clear:
+    case ActionType.SetIterations:
+    case ActionType.SetLongbreakInterval:
+    case ActionType.SetShortbreakInterval:
+    case ActionType.SetTaskName:
+    case ActionType.SetWorkInterval:
     case ActionType.Skip:
+    case ActionType.StartCounting:
+    case ActionType.StopCounting:
       return {
         ...payload,
       };

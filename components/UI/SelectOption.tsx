@@ -1,10 +1,10 @@
-import React, { ChangeEventHandler } from 'react';
+import React from 'react';
 
 interface SelectOptionProps {
   name: string;
   values: number[];
   onChange: any;
-  defaultValue: any;
+  defaultValue?: any;
 }
 
 export const SelectOption = (props: SelectOptionProps) => {
