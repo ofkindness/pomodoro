@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { CounterContext } from '../context/counter/counterContext';
 import { CountDown } from './CountDown';
 import { Button } from './UI/Button';
+import { IntervalType } from '../context/counter/counterReducer';
 
 export const Counter: React.FC = () => {
   const { counter, startCounting, stopCounting, skip, complete } =
@@ -14,15 +15,23 @@ export const Counter: React.FC = () => {
           <CountDown
             isCounting={false}
             onComplete={skip}
-            initialCountValue={10}
+            initialCountValue={counter.workInterval * 60}
           />
-          <div className="text-sm text-center mt-3">Working time</div>
           <div className="text-sm text-center mt-3">
-            Working on {'Pomodoro task'}
+            Working on: {counter.taskName}
+          </div>
+          <div className="text-sm text-center mt-3">
+            {IntervalType[counter.currentIntervalType]}
+          </div>
+          <div className="text-sm text-center mt-3">
+            Iterations Left: {counter.iterations}
           </div>
           <div className="flex flex-row">
-            <Button name={'Play'} onClick={startCounting} />
-            <Button name={'Stop'} onClick={stopCounting} />
+            {counter.isCounting === true ? (
+              <Button name={'Stop'} onClick={stopCounting} />
+            ) : (
+              <Button name={'Play'} onClick={startCounting} />
+            )}
             <Button name={'Complete'} onClick={complete} />
             <Button name={'Skip'} onClick={skip} />
           </div>

@@ -18,9 +18,12 @@ export const CountDown = (props: CountDownProps) => {
     }
   }, [counter.isCounting, count]);
 
+  const minutes = Math.floor(count / 60);
+  const seconds = count - minutes * 60;
+
   return (
-    <div className="pb-3 font-serif text-9xl text-white w-100  justify-center flex  bg-white bg-opacity-50 rounded-lg shadow-xl">
-      {'00'}:{count}
+    <div className="pb-5 pt-3 font-serif text-9xl text-white w-100  justify-center flex  bg-white bg-opacity-50 rounded-lg shadow-xl">
+      {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
     </div>
   );
 };
