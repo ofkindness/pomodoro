@@ -5,11 +5,12 @@ interface ContextState {
   complete: any;
   counter: any;
   init: any;
+  setCount: Function;
+  setIterations: Function;
+  setLongbreakInterval: Function;
+  setShortbreakInterval: Function;
   setTaskName: Function;
   setWorkInterval: Function;
-  setShortbreakInterval: Function;
-  setLongbreakInterval: Function;
-  setIterations: Function;
   skip: any;
   startCounting: any;
   stopCounting: any;

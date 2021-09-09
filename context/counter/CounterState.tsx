@@ -6,6 +6,7 @@ import {
   counterReducer,
   InitAction,
   initialCounterState,
+  SetCount,
   SetIterations,
   SetLongbreakInterval,
   SetShortbreakInterval,
@@ -28,6 +29,8 @@ export const CounterState = (props: CounterStateProps) => {
   const complete = () => dispatch(CompleteAction(state));
 
   const init = () => dispatch(InitAction(state));
+
+  const setCount = (count: number) => dispatch(SetCount(count, state));
 
   const setIterations = (iterations: number) =>
     dispatch(SetIterations(iterations, state));
@@ -57,6 +60,7 @@ export const CounterState = (props: CounterStateProps) => {
         complete,
         counter: state,
         init,
+        setCount,
         setIterations,
         setLongbreakInterval,
         setShortbreakInterval,
