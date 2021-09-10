@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
+
+import { Button } from './UI/Button';
 import { CounterContext } from '../context/counter/counterContext';
 import { SelectOption } from './UI/SelectOption';
-import { Button } from './UI/Button';
 
 export const SetupCounter: React.FC = () => {
   const {

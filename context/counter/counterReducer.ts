@@ -5,11 +5,12 @@ enum ActionType {
   Skip = 'SKIP_COUNTER',
   StartCounting = 'START_COUNTING',
   StopCounting = 'STOP_COUNTING',
-  SetTaskName = 'SETUP_TASKNAME',
-  SetWorkInterval = 'SETUP_WORKINTERVAL',
-  SetShortbreakInterval = 'SETUP_SHORTBREAKINTERVAL',
-  SetLongbreakInterval = 'SETUP_LONGBREAKINTERVAL',
-  SetIterations = 'SETUP_ITERATIONS',
+  SetCount = 'SET_COUNT',
+  SetTaskName = 'SET_TASKNAME',
+  SetWorkInterval = 'SET_WORKINTERVAL',
+  SetShortbreakInterval = 'SET_SHORTBREAKINTERVAL',
+  SetLongbreakInterval = 'SET_LONGBREAKINTERVAL',
+  SetIterations = 'SET_ITERATIONS',
 }
 
 export enum IntervalType {
@@ -18,12 +19,19 @@ export enum IntervalType {
   'Long Break',
 }
 
+const results: number[] = [];
+
+results[IntervalType['Working Time']] = 0;
+results[IntervalType['Short Break']] = 0;
+results[IntervalType['Long Break']] = 0;
+
 const defaultCounterValues = {
   taskName: 'Task Name',
   workInterval: 25,
   shortbreakInterval: 5,
   iterations: 3,
   longbreakInterval: 30,
+  results,
 };
 
 interface Action {
@@ -33,16 +41,17 @@ interface Action {
 
 type State = {
   count: number;
+  currentIntervalType?: number;
+  currentIteration?: number;
   isActive: boolean;
   isComplete: boolean;
   isCounting: boolean;
-  taskName: string;
-  workInterval: number;
-  shortbreakInterval: number;
   iterations: number;
   longbreakInterval: number;
-  currentIntervalType?: number;
-  currentIteration?: number;
+  results?: number[];
+  shortbreakInterval: number;
+  taskName: string;
+  workInterval: number;
 };
 
 export const initialCounterState: State = {
@@ -51,6 +60,7 @@ export const initialCounterState: State = {
   isComplete: false,
   isCounting: false,
   currentIteration: 0,
+  currentIntervalType: IntervalType['Working Time'],
   ...defaultCounterValues,
 };
 
@@ -67,7 +77,7 @@ const nextIntervalType = (
   }
 
   if (currentIntervalType === IntervalType['Short Break']) {
-    if (iterationsLeft && iterationsLeft > 0) {
+    if (iterationsLeft && iterationsLeft >= 0) {
       return IntervalType['Working Time'];
     }
 
@@ -75,11 +85,24 @@ const nextIntervalType = (
   }
 };
 
+const currentInterval = (state: State, currentIntervalType?: number) => {
+  switch (currentIntervalType) {
+    case IntervalType['Working Time']:
+      return state.workInterval * 60;
+    case IntervalType['Short Break']:
+      return state.shortbreakInterval * 60;
+    case IntervalType['Long Break']:
+      return state.longbreakInterval * 60;
+    default:
+      return 0;
+  }
+};
+
 const iterationsLeft = (
   currentIntervalType: number | undefined,
   iterations: number
 ) => {
-  if (currentIntervalType === IntervalType['Short Break']) {
+  if (currentIntervalType === IntervalType['Short Break'] && iterations >= 0) {
     return iterations - 1;
   }
 
@@ -90,6 +113,7 @@ export const InitAction = (state: State) => ({
   type: ActionType.Init,
   payload: {
     ...state,
+    count: currentInterval(state, state.currentIntervalType),
     isActive: true,
     currentIntervalType: nextIntervalType(),
   },
@@ -100,6 +124,16 @@ export const ClearAction: Action = {
   payload: {
     ...initialCounterState,
   },
+};
+
+export const SetCount = (count: number, state: State) => {
+  return {
+    type: ActionType.SetTaskName,
+    payload: {
+      ...state,
+      count,
+    },
+  };
 };
 
 export const SetTaskName = (taskName: string, state: State) => {
@@ -179,6 +213,30 @@ export const StopCounting = (state: State) => {
 };
 
 export const SkipAction = (state: State) => {
+  const results = state.results || [];
+
+  if (state.currentIntervalType === IntervalType['Long Break']) {
+    results[IntervalType['Long Break']] = state.count;
+    return {
+      type: ActionType.Skip,
+      payload: {
+        ...state,
+        isCounting: false,
+        isComplete: true,
+        isActive: false,
+        results,
+      },
+    };
+  }
+
+  if (state.currentIntervalType === IntervalType['Working Time']) {
+    results[IntervalType['Working Time']] += state.count;
+  }
+
+  if (state.currentIntervalType === IntervalType['Short Break']) {
+    results[IntervalType['Short Break']] += state.count;
+  }
+
   const iterations = iterationsLeft(
     state.currentIntervalType,
     state.iterations
@@ -188,25 +246,17 @@ export const SkipAction = (state: State) => {
     iterations
   );
 
-  if (iterations === 0 && currentIntervalType === IntervalType['Long Break']) {
-    return {
-      type: ActionType.Skip,
-      payload: {
-        ...state,
-        currentIntervalType,
-        iterations,
-        isComplete: true,
-        isActive: false,
-      },
-    };
-  }
+  const interval = currentInterval(state, currentIntervalType);
 
   return {
     type: ActionType.Skip,
     payload: {
       ...state,
+      count: interval,
+      isCounting: true,
       currentIntervalType,
       iterations,
+      results,
     },
   };
 };
@@ -226,6 +276,7 @@ export function counterReducer(state: State, action: Action): State {
     case ActionType.Clear:
     case ActionType.Complete:
     case ActionType.Init:
+    case ActionType.SetCount:
     case ActionType.SetIterations:
     case ActionType.SetLongbreakInterval:
     case ActionType.SetShortbreakInterval:
