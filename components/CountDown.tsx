@@ -1,13 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
+
 import { CounterContext } from '../context/counter/counterContext';
 
-interface CountDownProps {
-  initialCountValue: number;
-  isCounting: boolean;
-  onComplete: Function;
-}
-
-export const CountDown = (props: CountDownProps) => {
+export const CountDown = () => {
   const { counter, setCount } = useContext(CounterContext);
 
   useEffect(() => {

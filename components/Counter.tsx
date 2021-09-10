@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
-import { CounterContext } from '../context/counter/counterContext';
-import { CountDown } from './CountDown';
+
 import { Button } from './UI/Button';
+import { CountDown } from './CountDown';
+import { CounterContext } from '../context/counter/counterContext';
 import { IntervalType } from '../context/counter/counterReducer';
 
 export const Counter: React.FC = () => {
@@ -11,11 +12,7 @@ export const Counter: React.FC = () => {
     return (
       <div className="bg-white-500 px-5 py-5">
         <div className="text-white-100 ">
-          <CountDown
-            isCounting={false}
-            onComplete={skip}
-            initialCountValue={counter.count}
-          />
+          <CountDown />
           <div className="text-sm text-center mt-3">
             Working on: {counter.taskName}
           </div>

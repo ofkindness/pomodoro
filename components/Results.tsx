@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import { CounterContext } from '../context/counter/counterContext';
+
 import { Button } from './UI/Button';
+import { CounterContext } from '../context/counter/counterContext';
 
 export const Results: React.FC = () => {
   const { counter, clear } = useContext(CounterContext);
