@@ -216,7 +216,8 @@ export const SkipAction = (state: State) => {
   const results = state.results || [];
 
   if (state.currentIntervalType === IntervalType['Long Break']) {
-    results[IntervalType['Long Break']] = state.count;
+    results[IntervalType['Long Break']] =
+      state.longbreakInterval * 60 - state.count;
     return {
       type: ActionType.Skip,
       payload: {
@@ -230,11 +231,13 @@ export const SkipAction = (state: State) => {
   }
 
   if (state.currentIntervalType === IntervalType['Working Time']) {
-    results[IntervalType['Working Time']] += state.count;
+    results[IntervalType['Working Time']] +=
+      state.workInterval * 60 - state.count;
   }
 
   if (state.currentIntervalType === IntervalType['Short Break']) {
-    results[IntervalType['Short Break']] += state.count;
+    results[IntervalType['Short Break']] +=
+      state.shortbreakInterval * 60 - state.count;
   }
 
   const iterations = iterationsLeft(
@@ -261,14 +264,30 @@ export const SkipAction = (state: State) => {
   };
 };
 
-export const CompleteAction = (state: State) => ({
-  type: ActionType.Complete,
-  payload: {
-    ...state,
-    isActive: false,
-    isComplete: true,
-  },
-});
+export const CompleteAction = (state: State) => {
+  if (state.currentIntervalType === IntervalType['Long Break']) {
+    results[IntervalType['Long Break']] =
+      state.longbreakInterval * 60 - state.count;
+  }
+
+  if (state.currentIntervalType === IntervalType['Working Time']) {
+    results[IntervalType['Working Time']] +=
+      state.workInterval * 60 - state.count;
+  }
+
+  if (state.currentIntervalType === IntervalType['Short Break']) {
+    results[IntervalType['Short Break']] +=
+      state.shortbreakInterval * 60 - state.count;
+  }
+  return {
+    type: ActionType.Complete,
+    payload: {
+      ...state,
+      isActive: false,
+      isComplete: true,
+    },
+  };
+};
 
 export function counterReducer(state: State, action: Action): State {
   const { type, payload } = action;
